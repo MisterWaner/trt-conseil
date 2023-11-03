@@ -1,21 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 import { FaBars, FaXmark } from "react-icons/fa6";
 import Link from "next/link";
-import { Pacifico } from "next/font/google";
-
-const pacifico = Pacifico({
-    weight: "400",
-    subsets: ["latin"],
-    fallback: ["cursive"],
-});
+import { pacifico } from "@/app/ui/fonts";
 
 const links: Array<{ label: string; href: string }> = [
     { label: "Accueil", href: "/consultant" },
-    { label: "les candidats", href: "/consultant//candidats" },
-    { label: "les offres", href: "/consultant//offres" },
-    { label: "Déconnexion", href: "/connexion" },
+    { label: "les candidats", href: "/consultant/candidats" },
+    { label: "les offres", href: "/consultant/offres" },
+    { label: "Déconnexion", href: "/login" },
 ];
 
 const ConsultantNavBar: React.FC = () => {
@@ -24,6 +20,8 @@ const ConsultantNavBar: React.FC = () => {
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    const pathname = usePathname();
 
     return (
         <header className="fixed top-0 left-0 z-40 w-full bg-white">
@@ -43,7 +41,9 @@ const ConsultantNavBar: React.FC = () => {
                         {links.map((link, index) => (
                             <li
                                 key={index}
-                                className="lg:mr-2 font-bold text-black hover:text-blue-500"
+                                className={clsx("lg:mr-2 font-bold text-black hover:text-blue-500", {
+                                    "text-lime-500": pathname === link.href,
+                                })}
                             >
                                 <Link href={link.href} onClick={toggleMenu}>
                                     <p className="p-2 capitalize">

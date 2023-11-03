@@ -7,7 +7,7 @@ const RecruiterInfoForm: React.FC = () => {
                     type="text"
                     name="firstname"
                     id="firstname"
-                    className="bg-amber-300/50 p-2 rounded-md focus:outline-none focus:ring focus:ring-amber-300"
+                    className="bg-indigo-300/50 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300"
                 />
             </div>
             <div className="flex flex-col mb-4 w-4/6">
@@ -16,7 +16,7 @@ const RecruiterInfoForm: React.FC = () => {
                     type="text"
                     name="lastname"
                     id="lastname"
-                    className="bg-amber-300/50 p-2 rounded-md focus:outline-none focus:ring focus:ring-amber-300"
+                    className="bg-indigo-300/50 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300"
                 />
             </div>
             <div className="flex flex-col mb-4 w-4/6">
@@ -25,7 +25,7 @@ const RecruiterInfoForm: React.FC = () => {
                     type="text"
                     name="lastname"
                     id="lastname"
-                    className="bg-amber-300/50 p-2 rounded-md focus:outline-none focus:ring focus:ring-amber-300"
+                    className="bg-indigo-300/50 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300"
                 />
             </div>
             <div className="flex flex-col mb-4 w-4/6">

@@ -12,7 +12,7 @@ const ModifyPasswordForm: React.FC<PasswordFormProps> = ({ role }) => {
                     id="email"
                     className={`${
                         role === "recruiter"
-                            ? "bg-amber-300/50 focus:ring-amber-300"
+                            ? "bg-indigo-300/50 focus:ring-indigo-300"
                             : "bg-sky-300/50 focus:ring-sky-300"
                     }  p-2 rounded-md focus:outline-none focus:ring `}
                 />
@@ -25,7 +25,7 @@ const ModifyPasswordForm: React.FC<PasswordFormProps> = ({ role }) => {
                     id="password"
                     className={`${
                         role === "recruiter"
-                            ? "bg-amber-300/50 focus:ring-amber-300"
+                            ? "bg-indigo-300/50 focus:ring-indigo-300"
                             : "bg-sky-300/50 focus:ring-sky-300"
                     }  p-2 rounded-md focus:outline-none focus:ring `}
                 />
@@ -38,7 +38,7 @@ const ModifyPasswordForm: React.FC<PasswordFormProps> = ({ role }) => {
                     id="password"
                     className={`${
                         role === "recruiter"
-                            ? "bg-amber-300/50 focus:ring-amber-300"
+                            ? "bg-indigo-300/50 focus:ring-indigo-300"
                             : "bg-sky-300/50 focus:ring-sky-300"
                     }  p-2 rounded-md focus:outline-none focus:ring `}
                 />

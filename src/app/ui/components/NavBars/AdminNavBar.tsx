@@ -1,20 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import clsx from "clsx";
+import { usePathname } from "next/navigation";
 import { FaBars, FaXmark } from "react-icons/fa6";
 import Link from "next/link";
-import { Pacifico } from "next/font/google";
-
-const pacifico = Pacifico({
-    weight: "400",
-    subsets: ["latin"],
-    fallback: ["cursive"],
-});
+import { pacifico } from "@/app/ui/fonts";
 
 const links: Array<{ label: string; href: string }> = [
     { label: "Accueil", href: "/admin" },
-    { label: "Les consultants", href: "/admin//consultants" },
-    { label: "Déconnexion", href: "/connexion" },
+    { label: "Les consultants", href: "/admin/consultants" },
+    { label: "Déconnexion", href: "/login" },
 ];
 
 const AdminNavBar: React.FC = () => {
@@ -23,6 +19,8 @@ const AdminNavBar: React.FC = () => {
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    const pathname = usePathname();
 
     return (
         <header className="fixed top-0 left-0 z-40 w-full bg-white">
@@ -42,7 +40,9 @@ const AdminNavBar: React.FC = () => {
                         {links.map((link, index) => (
                             <li
                                 key={index}
-                                className="lg:mr-2 font-bold text-black hover:text-blue-500"
+                                className={clsx("lg:mr-2 font-bold text-black hover:text-blue-500", {
+                                    "text-orange-500": pathname === link.href,
+                                })}
                             >
                                 <Link href={link.href} onClick={toggleMenu}>
                                     <p className="p-2 capitalize">
