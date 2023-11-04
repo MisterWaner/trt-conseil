@@ -52,12 +52,12 @@ model Candidate {
 }
 
 model Recruiter {
-    id      String  @id @default(uuid())
-    name    String
-    address String
-    user    User    @relation(fields: [userId], references: [id])
-    userId  String
-    offers  Offer[]
+    id          String  @id @default(uuid())
+    societyName String
+    address     String
+    user        User    @relation(fields: [userId], references: [id])
+    userId      String
+    offers      Offer[]
 }
 
 model Resume {
@@ -84,7 +84,7 @@ model Offer {
 }
 
 model Application {
-    id  String    @id @default(uuid())
+    id              String    @id @default(uuid())
     applicationDate DateTime
     candidate       Candidate @relation(fields: [candidateId], references: [id])
     candidateId     String
