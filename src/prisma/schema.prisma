@@ -6,9 +6,8 @@ generator client {
 }
 
 datasource db {
-    provider  = "postgresql"
-    url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-    directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 model Role {
@@ -18,54 +17,34 @@ model Role {
 }
 
 model User {
-    id          String       @id @default(uuid())
-    email       String       @unique
-    password    String
-    role        Role         @relation(fields: [roleId], references: [id])
-    roleId      Int
-    consultants Consultant[]
-    candidates  Candidate[]
-    enterprises Recruiter[]
+    id           String        @id @default(uuid())
+    email        String        @unique
+    password     String
+    firstname    String?
+    lastname     String?
+    isApproved   Boolean?       @default(false)
+    societyName  String?
+    address      String?
+    resumes      Resume?
+    applications Application[]
+    offers       Offer[]
+    resumeId     String?
+    role         Role          @relation(fields: [roleId], references: [id])
+    roleId       Int
 }
 
 model Admin {
-    id       String @id @default(uuid())
+    id       Int    @id @default(autoincrement())
     email    String @unique
     password String
 }
 
-model Consultant {
-    id     String @id @default(uuid())
-    user   User   @relation(fields: [userId], references: [id])
-    userId String
-}
-
-model Candidate {
-    id           String        @id @unique @default(uuid())
-    firstname    String
-    lastname     String
-    isApproved   Boolean       @default(false)
-    user         User          @relation(fields: [userId], references: [id])
-    userId       String
-    resumes      Resume?
-    applications Application[]
-}
-
-model Recruiter {
-    id          String  @id @default(uuid())
-    societyName String
-    address     String
-    user        User    @relation(fields: [userId], references: [id])
-    userId      String
-    offers      Offer[]
-}
-
 model Resume {
-    id          String    @id @default(uuid())
-    name        String
-    path        String
-    candidate   Candidate @relation(fields: [candidateId], references: [id])
-    candidateId String    @unique
+    id     String @id @default(uuid())
+    name   String
+    path   String
+    user   User   @relation(fields: [userId], references: [id])
+    userId String @unique
 }
 
 model Offer {
@@ -78,16 +57,16 @@ model Offer {
     contractType    String
     publicationDate DateTime
     isApproved      Boolean       @default(false)
-    recruiter       Recruiter     @relation(fields: [recruiterId], references: [id])
-    recruiterId     String
+    user            User          @relation(fields: [userId], references: [id])
+    userId          String
     applications    Application[]
 }
 
 model Application {
-    id              String    @id @default(uuid())
+    id              String   @id @default(uuid())
     applicationDate DateTime
-    candidate       Candidate @relation(fields: [candidateId], references: [id])
-    candidateId     String
-    offer           Offer     @relation(fields: [offerId], references: [id])
+    user            User     @relation(fields: [userId], references: [id])
+    userId          String
+    offer           Offer    @relation(fields: [offerId], references: [id])
     offerId         Int
 }
