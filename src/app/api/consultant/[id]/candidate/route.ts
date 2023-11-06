@@ -1,25 +1,20 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-type Props = {
-    params: {
-        id: string;
-    };
-};
-
 const prisma = new PrismaClient();
 
-export async function GET(request: Request, { params: { id } }: Props) {
+export default async function GET() { 
     try {
-        const offers = await prisma.offer.findMany({
+        const candidates = await prisma.user.findMany({
             where: {
-                userId: id,
-            },
+                roleId: 2,
+            }
         });
-        return NextResponse.json(offers);
+
+        return NextResponse.json(candidates);
+
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Erreur lors de la récupération" });
     }
 }
-

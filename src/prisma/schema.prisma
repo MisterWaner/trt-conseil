@@ -49,7 +49,7 @@ model Resume {
 
 model Offer {
     title           String
-    reference       String       @id
+    reference       String      @id
     salary          Int
     place           String
     schedules       String
