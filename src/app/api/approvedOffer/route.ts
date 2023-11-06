@@ -5,13 +5,13 @@ const prisma = new PrismaClient();
 
 export async function GET() { 
     try {
-        const offers = await prisma.offer.findMany({
+        const approvedOffers = await prisma.offer.findMany({
             where: {
                 isApproved: true,
-            }
+            },
         });
 
-        return NextResponse.json(offers);
+        return NextResponse.json(approvedOffers);
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Erreur lors de la récupération" });

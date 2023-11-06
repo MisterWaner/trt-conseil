@@ -11,17 +11,17 @@ const prisma = new PrismaClient();
 
 export async function GET(request: Request, { params: { reference } }: Props) {
     try {
-        if (!reference)
-            return NextResponse.json({ message: "Paramètre manquant" });
+        if (!reference) return NextResponse.json({ message: "Paramètre manquant" });
 
         const offer = await prisma.offer.findUnique({
             where: {
                 reference: reference,
+                isApproved: false,
             },
         });
 
         if (!offer) {
-            return NextResponse.json({ message: "Offre non trouvée" });
+            return NextResponse.json({ message: "Candidat non trouvé" });
         }
 
         return NextResponse.json(offer);
@@ -33,17 +33,17 @@ export async function GET(request: Request, { params: { reference } }: Props) {
 
 export async function PUT(request: Request, { params: { reference } }: Props) {
     try {
-        if (!reference)
-            return NextResponse.json({ message: "Paramètre manquant" });
+        if (!reference) return NextResponse.json({ message: "Paramètre manquant" });
 
         const offer = await prisma.offer.findUnique({
             where: {
                 reference: reference,
+                isApproved: false,
             },
         });
 
         if (!offer) {
-            return NextResponse.json({ message: "Offre non trouvée" });
+            return NextResponse.json({ message: "Candidat non trouvé" });
         }
 
         const approvedOffer = await prisma.offer.update({
@@ -61,37 +61,6 @@ export async function PUT(request: Request, { params: { reference } }: Props) {
         });
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ message: "Erreur lors de la modification" });
-    }
-}
-
-export async function DELETE(request: Request, { params: { reference } }: Props) {
-    try {
-        if (!reference)
-            return NextResponse.json({ message: "Paramètre manquant" });
-
-        const offer = await prisma.offer.findUnique({
-            where: {
-                reference: reference,
-            },
-        });
-
-        if (!offer) {
-            return NextResponse.json({ message: "Offre non trouvée" });
-        }
-
-        const deletedOffer = await prisma.offer.delete({
-            where: {
-                reference: reference,
-            },
-        });
-
-        return NextResponse.json({
-            message: "Offre supprimée",
-            deletedOffer,
-        });
-    } catch (error) {
-        console.log(error);
-        return NextResponse.json({ message: "Erreur lors de la suppression" });
+        return NextResponse.json({ message: "Erreur lors de la mise à jour" });
     }
 }

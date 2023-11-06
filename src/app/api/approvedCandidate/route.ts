@@ -5,11 +5,16 @@ const prisma = new PrismaClient();
 
 export async function GET() {
     try {
-        const offers = await prisma.offer.findMany();
-        return NextResponse.json(offers);
+        const approvedCandidates = await prisma.user.findMany({
+            where: {
+                roleId: 2,
+                isApproved: true,
+            },
+        })
+
+        return NextResponse.json(approvedCandidates);
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Erreur lors de la récupération" });
     }
 }
-

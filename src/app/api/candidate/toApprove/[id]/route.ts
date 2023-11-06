@@ -2,12 +2,14 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 export type Props = {
-    id: string;
-}
+    params: {
+        id: string;
+    };
+};
 
 const prisma = new PrismaClient();
 
-export async function GET (request: Request, { id }: Props) {
+export async function GET(request: Request, { params: { id } }: Props) {
     try {
         if (!id) return NextResponse.json({ message: "Paramètre manquant" });
 
@@ -15,6 +17,7 @@ export async function GET (request: Request, { id }: Props) {
             where: {
                 id: id,
                 roleId: 2,
+                isApproved: false,
             },
         });
 
@@ -29,7 +32,7 @@ export async function GET (request: Request, { id }: Props) {
     }
 }
 
-export async function PUT(request: Request, { id }: Props) { 
+export async function PUT(request: Request, { params: { id } }: Props) {
     try {
         if (!id) return NextResponse.json({ message: "Paramètre manquant" });
 
@@ -37,6 +40,7 @@ export async function PUT(request: Request, { id }: Props) {
             where: {
                 id: id,
                 roleId: 2,
+                isApproved: false,
             },
         });
 
@@ -60,6 +64,6 @@ export async function PUT(request: Request, { id }: Props) {
         });
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ message: "Erreur lors de la modification" });
+        return NextResponse.json({ message: "Erreur lors de la mise à jour" });
     }
 }

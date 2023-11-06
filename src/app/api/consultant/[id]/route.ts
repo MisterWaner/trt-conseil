@@ -31,4 +31,30 @@ export async function GET(request: Request, { params: { id } }: Props) {
     }
 }
 
+export async function DELETE(request: Request, { params: { id } }: Props) {
+    try {
+        if (!id) return NextResponse.json({ message: "Paramètre manquant" });
+
+        const consultant = await prisma.user.findUnique({
+            where: {
+                id: id,
+                roleId: 3,
+            },
+        });
+
+        if (!consultant) return NextResponse.json({ message: "Consultant non trouvé" });
+
+        await prisma.user.delete({
+            where: {
+                id: id,
+                roleId: 3,
+            },
+        });
+
+        return NextResponse.json({ message: `Consultant ${id} supprimé` });
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ message: "Erreur lors de la suppression" });
+    }
+}
 

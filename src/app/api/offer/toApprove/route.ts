@@ -3,16 +3,15 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default async function GET() { 
+export async function GET() {
     try {
-        const candidates = await prisma.user.findMany({
+        const toApproveOffers = await prisma.offer.findMany({
             where: {
-                roleId: 2,
-            }
+                isApproved: false,
+            },
         });
 
-        return NextResponse.json(candidates);
-
+        return NextResponse.json(toApproveOffers);
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Erreur lors de la récupération" });

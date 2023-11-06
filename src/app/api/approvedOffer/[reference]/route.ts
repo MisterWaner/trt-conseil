@@ -17,6 +17,7 @@ export async function GET(request: Request, { params: { reference } }: Props) {
         const offer = await prisma.offer.findUnique({
             where: {
                 reference: reference,
+                isApproved: true,
             },
         });
 
