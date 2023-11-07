@@ -32,7 +32,7 @@ export async function POST(request: Request) {
             },
         });
 
-        return NextResponse.json(newConsultant);
+        return NextResponse.json({ message: "Consultant créé", data: newConsultant, temporaryPassword });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Erreur lors de la création" });

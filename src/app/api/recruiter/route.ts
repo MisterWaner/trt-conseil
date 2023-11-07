@@ -44,7 +44,7 @@ export async function POST(request: Request) {
             },
         });
 
-        return NextResponse.json(newRecruiter);
+        return NextResponse.json({ message: "Recruteur créé", data: newRecruiter, password});
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Erreur lors de la création" });

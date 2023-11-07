@@ -29,8 +29,7 @@ export async function POST(request: Request) {
                 password: hashPassword,
             },
         });
-
-        return NextResponse.json(newAdmin);
+        return NextResponse.json({ message: "Admin créé", data: newAdmin, password });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Erreur lors de la création" });

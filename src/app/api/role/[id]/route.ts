@@ -9,13 +9,15 @@ export type Props = {
 
 const prisma = new PrismaClient();
 
-export async function GET(request: Request, { params: { id } }: Props) {
+export async function GET(request: Request, { params: {id } }: Props) {
     try {
+
+
         if (!id) return NextResponse.json({ message: "Paramètre manquant" });
 
         const role = await prisma.role.findUnique({
             where: {
-                id: id,
+                id: Number(id),
             },
         });
 
@@ -36,7 +38,7 @@ export async function PUT(request: Request, { params: { id } }: Props) {
 
         const role = await prisma.role.findUnique({
             where: {
-                id: id,
+                id: Number(id),
             },
         });
 
@@ -44,7 +46,7 @@ export async function PUT(request: Request, { params: { id } }: Props) {
 
         const updatedRole = await prisma.role.update({
             where: {
-                id: id,
+                id: Number(id),
             },
             data: {
                 name: name,
@@ -64,7 +66,7 @@ export async function DELETE(request: Request, { params: { id } }: Props) {
 
         const role = await prisma.role.findUnique({
             where: {
-                id: id,
+                id: Number(id),
             },
         });
 
@@ -72,7 +74,7 @@ export async function DELETE(request: Request, { params: { id } }: Props) {
 
         const deletedRole = await prisma.role.delete({
             where: {
-                id: id,
+                id: Number(id),
             },
         });
 

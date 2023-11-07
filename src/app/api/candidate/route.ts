@@ -45,7 +45,7 @@ export async function POST(request: Request) {
             },
         });
 
-        return NextResponse.json(newCandidate);
+        return NextResponse.json({ message: "Candidat créé", data: newCandidate, password});
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Erreur lors de la création" });
