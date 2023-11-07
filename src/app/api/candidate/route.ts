@@ -58,6 +58,9 @@ export async function GET() {
             where: {
                 roleId: 2,
             },
+            orderBy: {
+                id: "asc",
+            },
         });
 
         return NextResponse.json(candidates);

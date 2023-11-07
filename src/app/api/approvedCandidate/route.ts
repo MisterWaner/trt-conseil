@@ -10,6 +10,9 @@ export async function GET() {
                 roleId: 2,
                 isApproved: true,
             },
+            orderBy: {
+                id: "asc",
+            },
         })
 
         return NextResponse.json(approvedCandidates);

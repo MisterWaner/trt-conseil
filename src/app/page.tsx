@@ -33,7 +33,7 @@ const Home: React.FC = () => {
                         </div>
                         <div className="flex justify-center items-center w-full border border-black px-3 py-1 bg-black rounded-md font-bold text-white custom-btn">
                             <Link
-                                href="/inscription"
+                                href="/register"
                                 className="w-full text-center"
                             >
                                 Créer mon compte

@@ -57,7 +57,11 @@ export async function POST(request: Request) {
 
 export async function GET() {
     try {
-        const offers = await prisma.offer.findMany();
+        const offers = await prisma.offer.findMany({
+            orderBy: {
+                reference: "asc",
+            },
+        });
         return NextResponse.json(offers);
     } catch (error) {
         console.log(error);

@@ -57,6 +57,9 @@ export async function GET() {
             where: {
                 roleId: 1,
             },
+            orderBy: {
+                id: "asc",
+            },
         });
 
         return NextResponse.json(recruiters);

@@ -43,6 +43,9 @@ export async function GET() {
     try {
         const consultants = await prisma.user.findMany({
             where: { roleId: 3 },
+            orderBy: {
+                id: "asc",
+            },
         });
         return NextResponse.json(consultants);
     } catch (error) {

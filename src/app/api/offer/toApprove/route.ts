@@ -9,6 +9,9 @@ export async function GET() {
             where: {
                 isApproved: false,
             },
+            orderBy: {
+                reference: "asc",
+            },
         });
 
         return NextResponse.json(toApproveOffers);
