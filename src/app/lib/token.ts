@@ -1,36 +1,22 @@
-import { getEnvVariable } from "@/app/lib/utils/getEnvVariable";
-import { SignJWT, jwtVerify } from "jose";
+import { jwtVerify } from 'jose';
 
-export const signJWT = async (
-    payload: { sub: string },
-    options: { exp: string }
-) => {
-    try {
-        const secret = new TextEncoder().encode(
-            getEnvVariable("JWT_SECRET_KEY")
-        );
-        const alg = "HS256";
-        return new SignJWT(payload)
-            .setProtectedHeader({ alg })
-            .setExpirationTime(options.exp)
-            .setIssuedAt()
-            .setSubject(payload.sub)
-            .sign(secret);
-    } catch (error) {
-        throw error;
+export function getJwtSecretKey() {
+    const secret = process.env.JWT_SECRET_KEY;
+
+    if (!secret) {
+        throw new Error('Missing JWT_SECRET_KEY environment variable');
     }
-};
 
-export const verifyJWT = async <T>(token: string): Promise<T> => {
+    return new TextEncoder().encode(secret);
+}
+
+export async function verifyToken(token: string) {
     try {
-        return (
-            await jwtVerify(
-                token,
-                new TextEncoder().encode(process.env.JWT_SECRET_KEY)
-            )
-        ).payload as T;
+        const { payload } = await jwtVerify(token, getJwtSecretKey());
+
+        return payload;
     } catch (error) {
         console.log(error);
-        throw new Error("Your token has expired.");
+        return null;
     }
-};
+}

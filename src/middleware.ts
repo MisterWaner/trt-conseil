@@ -1,29 +1,51 @@
-import { NextRequest, NextResponse } from "next/server";
-import { verifyJWT } from "@/app/lib/token";
-import { getErrorResponse } from "@/app/lib/utils/getErrorResponse";
+import { NextResponse, NextRequest } from "next/server";
+import { verifyToken } from "./app/lib/token";
 
-interface AuthenticatedRequest extends NextRequest {
-    user: {
-        id: string;
+const AUTH_PAGES = ["/login", "/register", "/logout"];
+
+const isAuthPages = (url: string) =>
+    AUTH_PAGES.some((page) => page.startsWith(url));
+
+export async function middleware(request: NextRequest) {
+    const { url, nextUrl, cookies } = request;
+    const { value: token } = cookies.get("token") ?? { value: null };
+
+    const hasVerifiedToken = token && (await verifyToken(token));
+    const isAuthPageResquested = isAuthPages(nextUrl.pathname);
+
+    if (isAuthPageResquested) {
+        if (!hasVerifiedToken) {
+            const response = NextResponse.next();
+            response.cookies.delete("token");
+            return response;
+        }
+        const response = NextResponse.redirect(new URL(`/`, url));
+        return response;
     }
-    admin: {
-        id: string;
+
+    if (!hasVerifiedToken) {
+        const searchParams = new URLSearchParams(nextUrl.searchParams);
+        searchParams.set("next", nextUrl.pathname);
+
+        const response = NextResponse.redirect(
+            new URL(`/login?${searchParams}`, url)
+        );
+        response.cookies.delete("token");
+
+        return response;
     }
+    return NextResponse.next();
 }
 
-let redirectToLogin = false;
-
-export async function middleware(req: NextRequest) {
-    let token: string | undefined;
-
-    if (req.cookies.has("token")) {
-        token = req.cookies.get("token")?.value;
-    } else if (req.headers.get("Authorization")?.startsWith("Bearer ")) {
-        token = req.headers.get("Authorization")?.substring(7);
-    }
-
-    if (req.nextUrl.pathname.startsWith("/login") && (!token || redirectToLogin)) return;
-
-    
-}
-
+export const config = {
+    matcher: [
+        "/login",
+        "/register",
+        "/logout",
+        "/api/:path*",
+        "/admin/:path*",
+        "/recruiter/:path*",
+        "/consultant/:path*",
+        "/candidate/:path*",
+    ],
+};

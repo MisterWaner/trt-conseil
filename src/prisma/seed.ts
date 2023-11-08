@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
-import { fa, faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
 
 async function main() {
-    await prisma.user.deleteMany();
     await prisma.offer.deleteMany();
+    await prisma.user.deleteMany();
     await prisma.role.deleteMany();
 
     const length = 10;
@@ -23,9 +23,10 @@ async function main() {
 
     await prisma.user.create({
         data: {
-            email: "admin@admin.fr",
+            email: "admin@trt-conseil.fr",
             password: hashedPassword,
             roleId: 1,
+            isApproved: true,
         },
     });
 
@@ -33,16 +34,17 @@ async function main() {
 
         await prisma.user.create({
             data: {
-                email: faker.internet.email(),
-                password: faker.internet.password(),
+                email: faker.internet.email({provider: "trt-conseil.fr"}),
+                password: faker.internet.password({ length: 25 }),
                 roleId: 2,
+                isApproved: true,
             },
         });
 
         await prisma.user.create({
             data: {
                 email: faker.internet.email(),
-                password: faker.internet.password(),
+                password: faker.internet.password({ length: 25 }),
                 firstname: faker.person.firstName(),
                 lastname: faker.person.lastName(),
                 roleId: 4,
@@ -50,8 +52,8 @@ async function main() {
         });
         await prisma.user.create({
             data: {
-                email: faker.internet.email(),
-                password: faker.internet.password(),
+                email: faker.internet.email({provider: `${faker.company.name().trim().split(" ").join("")}.fr}`}),
+                password: faker.internet.password({ length: 25 }),
                 societyName: faker.company.name(),
                 address: faker.location.streetAddress(),
                 roleId: 3,
