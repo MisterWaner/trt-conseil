@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/app/lib/prisma";
 
 export type Props = {
     params: {
         id: string;
     };
 };
-
-const prisma = new PrismaClient();
 
 export async function GET(request: Request, { params: { id } }: Props) {
     try {
@@ -16,7 +14,7 @@ export async function GET(request: Request, { params: { id } }: Props) {
         const candidate = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: 2,
+                roleId: 4,
                 isApproved: false,
             },
         });
@@ -39,7 +37,7 @@ export async function PUT(request: Request, { params: { id } }: Props) {
         const candidate = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: 2,
+                roleId: 4,
                 isApproved: false,
             },
         });
@@ -51,7 +49,7 @@ export async function PUT(request: Request, { params: { id } }: Props) {
         const approvedCandidate = await prisma.user.update({
             where: {
                 id: id,
-                roleId: 2,
+                roleId: 4,
             },
             data: {
                 isApproved: true,

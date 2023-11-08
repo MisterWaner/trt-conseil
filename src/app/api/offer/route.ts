@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/app/lib/prisma";
 import { generateOfferReference } from "@/app/lib/utils/generateOfferReference";
-
-const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
     try {

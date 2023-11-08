@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/app/lib/prisma";
 
 export type Props = {
     params: {
         reference: string;
     };
 }
-
-const prisma = new PrismaClient();
 
 export async function GET(request: Request, { params: { reference } }: Props) {
     try {

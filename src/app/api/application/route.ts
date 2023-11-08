@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/app/lib/prisma";
 
 export async function POST(request: Request) {
     try {
@@ -24,7 +22,7 @@ export async function POST(request: Request) {
         const candidate = await prisma.user.findUnique({
             where: {
                 id: userId,
-                roleId: 2,
+                roleId: 4,
             },
         });
 

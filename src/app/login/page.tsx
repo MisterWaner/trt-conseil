@@ -9,7 +9,7 @@ const Page: React.FC = () => {
                         Connexion
                     </h3>
                     <form
-                        action=""
+                        action="/api/auth/callback/credentials"
                         className="flex flex-col items-center justify-between form rounded-md p-10 mt-4"
                     >
                         <div className="flex flex-col mb-4 w-full">
@@ -45,5 +45,6 @@ const Page: React.FC = () => {
         </div>
     );
 };
+
 
 export default Page;

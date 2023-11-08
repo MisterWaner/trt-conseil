@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const adminSchema = z.object({
+export const LoginAdminSchema = z.object({
     email: z
         .string()
         .min(1, { message: "Veuillez renseigner votre adresse email" })
@@ -15,8 +15,6 @@ const adminSchema = z.object({
         .max(25, {
             message: "Votre mot de passe doit faire 25 caractères maximum",
         }),
-});
+})
 
-export type AdminSchema = z.infer<typeof adminSchema>;
-
-export default adminSchema;
+export type LoginAdminSchema = z.infer<typeof LoginAdminSchema>;

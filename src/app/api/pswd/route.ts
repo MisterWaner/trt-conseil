@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/app/lib/prisma";
 import { encryptPassword } from "@/app/lib/utils/encryptPassword";
 
 type Props = {
@@ -7,8 +7,6 @@ type Props = {
         id: string;
     };
 };
-
-const prisma = new PrismaClient();
 
 export async function PUT(request: Request, { params: { id } }: Props) {
     const {

@@ -7,18 +7,23 @@ type Props = {
     };
 };
 
-
 export async function GET(request: Request, { params: { id } }: Props) {
     try {
-        const offers = await prisma.offer.findMany({
+        if (!id) return NextResponse.json({ message: "Paramètre manquant" });
+
+        const user = await prisma.user.findUnique({
             where: {
-                userId: id,
-            },
+                id: id,
+            }
         });
-        return NextResponse.json(offers);
+
+        if (!user) {
+            return NextResponse.json({ message: "Consultant non trouvé" });
+        }
+
+        return NextResponse.json(user);
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Erreur lors de la récupération" });
     }
 }
-

@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import { encryptPassword } from "@/app/lib/utils/encryptPassword";
+import { prisma } from "@/app/lib/prisma";
 
 type Props = {
     params: {
         id: string;
     };
 };
-
-const prisma = new PrismaClient();
 
 export async function GET(request: Request, { params: { id } }: Props) {
     try {
@@ -17,7 +14,7 @@ export async function GET(request: Request, { params: { id } }: Props) {
         const candidate = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: 2,
+                roleId: 4,
             },
         });
 
@@ -36,7 +33,7 @@ export async function PUT(request: Request, { params: { id } }: Props) {
     const {
         lastname,
         firstname,
-        roleId = 2,
+        roleId = 4,
     }: {
         lastname: string;
         firstname: string;

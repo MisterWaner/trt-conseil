@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import { encryptPassword } from "@/app/lib/utils/encryptPassword";
+import { prisma } from "@/app/lib/prisma";
 
 type Props = {
     params: {
         id: string;
     };
 };
-
-const prisma = new PrismaClient();
 
 export async function GET(request: Request, { params: { id } }: Props) {
     try {
@@ -17,7 +14,7 @@ export async function GET(request: Request, { params: { id } }: Props) {
         const recruiter = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: 1,
+                roleId: 3,
             },
         });
 
@@ -38,7 +35,7 @@ export async function PUT(request: Request, { params: { id } }: Props) {
         firstname,
         societyName,
         address,
-        roleId = 2,
+        roleId = 3,
     }: {
         lastname: string;
         firstname: string;
@@ -88,7 +85,7 @@ export async function DELETE(request: Request, { params: { id } }: Props) {
         const deletedRecruiter = await prisma.user.delete({
             where: {
                 id: id,
-                roleId: 1,
+                roleId: 3,
             },
         });
 

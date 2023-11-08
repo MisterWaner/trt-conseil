@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const offerSchema = z.object({
+export const offerSchema = z.object({
     title: z.string().min(1, { message: "Le titre est obligatoire" }),
     salary: z
         .number()
@@ -14,5 +14,3 @@ const offerSchema = z.object({
 });
 
 export type OfferSchema = z.infer<typeof offerSchema>;
-
-export default offerSchema;

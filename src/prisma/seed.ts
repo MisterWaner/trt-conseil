@@ -5,7 +5,6 @@ import { fa, faker } from "@faker-js/faker";
 const prisma = new PrismaClient();
 
 async function main() {
-    await prisma.admin.deleteMany();
     await prisma.user.deleteMany();
     await prisma.offer.deleteMany();
     await prisma.role.deleteMany();
@@ -15,16 +14,18 @@ async function main() {
 
     await prisma.role.createMany({
         data: [
-            { id: 1, name: "Recruteur" },
-            { id: 2, name: "Candidat" },
-            { id: 3, name: "Consultant" },
+            { id: 1, name: "Admin"},
+            { id: 2, name: "Consultant" },
+            { id: 3, name: "Recruteur" },
+            { id: 4, name: "Candidat" },
         ],
     });
 
-    await prisma.admin.create({
+    await prisma.user.create({
         data: {
             email: "admin@admin.fr",
             password: hashedPassword,
+            roleId: 1,
         },
     });
 
@@ -34,7 +35,7 @@ async function main() {
             data: {
                 email: faker.internet.email(),
                 password: faker.internet.password(),
-                roleId: 3,
+                roleId: 2,
             },
         });
 
@@ -44,7 +45,7 @@ async function main() {
                 password: faker.internet.password(),
                 firstname: faker.person.firstName(),
                 lastname: faker.person.lastName(),
-                roleId: 2,
+                roleId: 4,
             },
         });
         await prisma.user.create({
@@ -53,7 +54,7 @@ async function main() {
                 password: faker.internet.password(),
                 societyName: faker.company.name(),
                 address: faker.location.streetAddress(),
-                roleId: 1,
+                roleId: 3,
             },
         });
         console.log("Seeding done");
@@ -61,7 +62,7 @@ async function main() {
 
     const recruiters = await prisma.user.findMany({
         where: {
-            roleId: 1,
+            roleId: 3,
         },
     });
 

@@ -1,3 +1,4 @@
+//Function to generate a temporary password durign the creation of a consultant
 export function generateTemporaryPassword(length: number): string {
     let result: string = "";
     const characters: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/app/lib/prisma";
 
 type Props = {
     params: {
         id: string;
     };
 };
-
-const prisma = new PrismaClient();
 
 export async function GET(request: Request, { params: { id } }: Props) {
     try {
@@ -16,7 +14,7 @@ export async function GET(request: Request, { params: { id } }: Props) {
         const consultant = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: 3,
+                roleId: 2,
             },
         });
 
@@ -38,7 +36,7 @@ export async function DELETE(request: Request, { params: { id } }: Props) {
         const consultant = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: 3,
+                roleId: 2,
             },
         });
 

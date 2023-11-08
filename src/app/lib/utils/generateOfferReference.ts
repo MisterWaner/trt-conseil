@@ -1,3 +1,4 @@
+//Functiion to get the first letters of the society name
 function getFirstLettersOfSocietyName(societyName: string): string {
     const societyNameWithoutSpaces: string = societyName.split(" ").join("");
     const societyNameInUpperCase: string = societyNameWithoutSpaces.toUpperCase();
@@ -6,6 +7,7 @@ function getFirstLettersOfSocietyName(societyName: string): string {
     return firstLettersOfSocietyName;
 }
 
+//Function to generate the offer reference with the first letters of the society name, the actual year, the actual month and a random number
 export function generateOfferReference(societyName: string): string {
     const letters = getFirstLettersOfSocietyName(societyName);
     const actualYear: number = new Date().getFullYear();
