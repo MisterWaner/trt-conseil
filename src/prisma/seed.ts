@@ -10,7 +10,7 @@ async function main() {
     await prisma.role.deleteMany();
 
     const length = 10;
-    const hashedPassword = await bcrypt.hash("admin", 10);
+    const hashedPassword = await bcrypt.hash("admin1234", 10);
 
     await prisma.role.createMany({
         data: [

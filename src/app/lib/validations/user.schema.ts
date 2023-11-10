@@ -113,6 +113,6 @@ export const UpdateUserSchema = z
         path: ["confirmation"],
     });
 
-export type RegisterUserInput = z.infer<typeof RegisterUserSchema>;
-export type LoginUserInput= z.infer<typeof LoginUserSchema>;
-export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
+export type RegisterUserSchema = z.infer<typeof RegisterUserSchema>;
+export type LoginUserSchema= z.infer<typeof LoginUserSchema>;
+export type UpdateUserSchema = z.infer<typeof UpdateUserSchema>;
