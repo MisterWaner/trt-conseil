@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LoginUserSchema } from "../lib/validations/user.schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Cookies from "universal-cookie";
+import { LoginUserSchema } from "@/app/lib/validations/user.schema";
+import Axios from "@/app/lib/axios";
+import Cookies from "js-cookie";
+
+const BASE_URL = "http://localhost:3000/api";
 
 const Page: React.FC = () => {
     const {
@@ -17,60 +20,76 @@ const Page: React.FC = () => {
         mode: "onTouched",
     });
 
-    const [userId, setUserId] = useState(null);
-    const [roleId, setRoleId] = useState(null);
+    const [user, setUser] = useState({
+        email: "",
+        password: "",
+    });
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
-        const storedToken = new Cookies().get("token");
-        if (storedToken) {
-            const storedUserId = new Cookies().get("id");
-            const storedRoleId = new Cookies().get("roleId");
-            setUserId(storedUserId);
-            setRoleId(storedRoleId);
-
-            storedRoleId === 1
-                ? router.push(`/admin/${storedUserId}`)
-                : storedUserId.roleId === 2
-                ? router.push(`/consultant/${storedUserId}`)
-                : storedUserId.roleId === 3
-                ? router.push(`/recruiter/${storedUserId}`)
-                : storedUserId.roleId === 4
-                ? router.push(`/candidate/${storedUserId}`)
-                : null;
+        if (user.email.length > 0 && user.password.length > 0) {
+            setButtonDisabled(false);
+        } else {
+            setButtonDisabled(true);
         }
-    }, [router]);
+    }, [user]);
 
     const handleLogin = async (data: LoginUserSchema) => {
         console.log(data);
 
         try {
-            const response = await fetch("http://localhost:3000/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-            console.log(response);
+            const response = await Axios.post(`${BASE_URL}/auth/login`, data);
+            console.log(response.data)
 
-            if (response.ok) {
+            if (response.status === 200) {
                 const {
                     token,
-                    id,
+                    email,
                     roleId,
-                }: { token: string; id: string; roleId: number } =
-                    await response.json();
+                    id,
+                }: {
+                    token: string;
+                    email: string;
+                    roleId: any;
+                    id: string;
+                } = await response.data;
 
-                const cookies = new Cookies();
-                cookies.set("token", token, { path: "/", maxAge: 3600000 });
-                cookies.set("id", id, { path: "/", maxAge: 3600000 });
-                cookies.set("roleId", roleId, { path: "/", maxAge: 3600000 });
-            } else {
-                console.error(response, "Échec de l'authentification");
+                Cookies.set("token", token, {
+                    secure: true,
+                    sameSite: "None",
+                    expires: 1,
+                });
+                Cookies.set("email", email, {
+                    secure: true,
+                    sameSite: "None",
+                    expires: 1,
+                });
+                Cookies.set("roleId", roleId, {
+                    secure: true,
+                    sameSite: "None",
+                    expires: 1,
+                });
+                Cookies.set("userId", id, {
+                    secure: true,
+                    sameSite: "None",
+                    expires: 1,
+                });
+
+                if (roleId === 1) {
+                    router.push("/admin");
+                } else if (roleId === 2) {
+                    router.push("/consultant");
+                } else if (roleId === 3) {
+                    router.push("/recruiter");
+                } else if (roleId === 4) {
+                    router.push("/candidate");
+                } else {
+                    router.push("/");
+                }
             }
         } catch (error) {
-            console.error("Une erreur s'est produite :", error);
+            console.log(error);
         }
     };
 
@@ -94,9 +113,15 @@ const Page: React.FC = () => {
                                 id="email"
                                 className="rounded-md p-3"
                                 {...register("email")}
+                                onChange={(event) =>
+                                    setUser({
+                                        ...user,
+                                        email: event.target.value,
+                                    })
+                                }
                             />
                             {errors.email ? (
-                                <p className="error-msg text-center">
+                                <p className="text-center error-msg">
                                     {errors.email?.message}
                                 </p>
                             ) : null}
@@ -110,15 +135,23 @@ const Page: React.FC = () => {
                                 id="password"
                                 className="rounded-md p-3"
                                 {...register("password")}
+                                onChange={(event) =>
+                                    setUser({
+                                        ...user,
+                                        password: event.target.value,
+                                    })
+                                }
                             />
                             {errors.password ? (
-                                <p className="error-msg text-center">
+                                <p className="text-center error-msg">
                                     {errors.password?.message}
                                 </p>
                             ) : null}
                         </div>
                         <div className="flex justify-center w-full mt-4 border border-black px-3 py-1 bg-black rounded-md font-bold text-white custom-btn cursor-pointer">
-                            <button type="submit">Se connecter</button>
+                            <button type="submit" disabled={buttonDisabled}>
+                                Se connecter
+                            </button>
                         </div>
                     </form>
                 </section>

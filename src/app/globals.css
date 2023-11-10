@@ -47,8 +47,7 @@ section#cta {
     border-radius: 5px;
     background-color: lightcoral;
     color: #fff;
-    font-size: 1.15rem;
-    font-weight: bold;
+    font-weight: 600;
     margin: 5px 0;
     padding: 10px 5px;
 }

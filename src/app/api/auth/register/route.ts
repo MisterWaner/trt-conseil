@@ -1,7 +1,6 @@
 import { getErrorResponse } from "@/app/lib/utils/getErrorResponse";
 import { prisma } from "@/app/lib/prisma";
 import {
-    RegisterUserInput,
     RegisterUserSchema,
 } from "@/app/lib/validations/user.schema";
 import { generateTemporaryPassword } from "@/app/lib/utils/generateTemporaryPassword";
@@ -11,7 +10,7 @@ import { ZodError } from "zod";
 
 export async function POST(request: NextRequest) {
     try {
-        const body = (await request.json()) as RegisterUserInput;
+        const body = await request.json();
         const data = RegisterUserSchema.parse(body);
 
         const {
