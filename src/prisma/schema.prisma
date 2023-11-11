@@ -10,10 +10,11 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Role {
-    id    Int    @id @default(autoincrement())
-    name  String @unique
-    users User[]
+enum Role {
+    admin
+    consultant
+    recruiter
+    candidat
 }
 
 model User {
@@ -22,15 +23,14 @@ model User {
     password     String
     firstname    String?
     lastname     String?
-    isApproved   Boolean?       @default(false)
+    isApproved   Boolean?      @default(false)
     societyName  String?
     address      String?
     resumes      Resume?
+    role         Role          @default(candidat)
     applications Application[]
     offers       Offer[]
     resumeId     String?
-    role         Role          @relation(fields: [roleId], references: [id])
-    roleId       Int
 }
 
 model Resume {
@@ -43,7 +43,7 @@ model Resume {
 
 model Offer {
     title           String
-    reference       String      @id
+    reference       String        @id
     salary          Int
     place           String
     schedules       String
