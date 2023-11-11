@@ -1,18 +1,12 @@
-import { getErrorResponse } from "@/app/lib/utils/getErrorResponse";
 import { prisma } from "@/app/lib/prisma";
-import {
-    RegisterUserSchema,
-} from "@/app/lib/validations/user.schema";
+import { RegisterUserSchema } from "@/app/lib/validations/user.schema";
 import { generateTemporaryPassword } from "@/app/lib/utils/generateTemporaryPassword";
 import { encryptPassword } from "@/app/lib/utils/encryptPassword";
 import { NextResponse, NextRequest } from "next/server";
-import { ZodError } from "zod";
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const data = RegisterUserSchema.parse(body);
-
         const {
             email,
             password,
@@ -23,11 +17,13 @@ export async function POST(request: NextRequest) {
             password: string;
             confirmation: string;
             roleId: number;
-        } = data;
+            } = body.data;
+        
+        console.log(body.data);
 
         if (roleId === 1) {
             if (!email || !password)
-                return NextResponse.json({ message: "Paramètre manquant" });
+                return NextResponse.json("Paramètre manquant", {status: 400});
 
             const admin = await prisma.user.findUnique({
                 where: {
@@ -37,7 +33,7 @@ export async function POST(request: NextRequest) {
             });
 
             if (admin)
-                return NextResponse.json({ message: "Cet admin existe déjà" });
+                return new NextResponse("L'utilisateur existe déjà", {status: 400});
 
             const hashPassword = await encryptPassword(password);
 
@@ -55,7 +51,7 @@ export async function POST(request: NextRequest) {
             });
         } else if (roleId === 2) {
             if (!email)
-                return NextResponse.json({ message: "Paramètre manquant" });
+                return NextResponse.json("Paramètre manquant", {status: 400});
 
             const consultant = await prisma.user.findUnique({
                 where: {
@@ -65,9 +61,7 @@ export async function POST(request: NextRequest) {
             });
 
             if (consultant)
-                return NextResponse.json({
-                    message: "Ce consultant existe déjà",
-                });
+                return NextResponse.json("L'utilisateur existe déjà", {status: 400});
 
             // Generate temporary password and hash it
             const temporaryPassword: string = generateTemporaryPassword(20);
@@ -90,7 +84,7 @@ export async function POST(request: NextRequest) {
             });
         } else if (roleId === 3 || roleId === 4) {
             if (!email || !password || !confirmation)
-                return NextResponse.json({ message: "Paramètre manquant" });
+                return NextResponse.json("Paramètre manquant", {status: 400});
 
             if (password !== confirmation)
                 return NextResponse.json({
@@ -130,12 +124,7 @@ export async function POST(request: NextRequest) {
             });
         }
     } catch (error: any) {
-        if (error instanceof ZodError)
-            return getErrorResponse(400, "failed to validate body", error);
-
-        if (error.code === "P2002")
-            return getErrorResponse(409, "L'email existe déjà");
-
-        return getErrorResponse(500, error.message);
+        console.error(error);
+        return NextResponse.json("Erreur lors de la création de l'utilisateur", {status: 500});
     }
 }

@@ -9,7 +9,7 @@ export const RegisterUserSchema = z
             .toLowerCase()
             .trim(),
         password: z
-            .string({})
+            .string()
             .min(8, {
                 message: "Votre mot de passe doit faire 8 caractères minimum",
             })
@@ -43,8 +43,8 @@ export const LoginUserSchema = z.object({
         .min(8, {
             message: "Votre mot de passe doit faire 8 caractères minimum",
         })
-        .max(25, {
-            message: "Votre mot de passe doit faire 25 caractères maximum",
+        .max(20, {
+            message: "Votre mot de passe doit faire 20 caractères maximum",
         }),
 });
 

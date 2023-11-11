@@ -1,84 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginUserSchema } from "@/app/lib/validations/user.schema";
-import signInAndRedirect from "../lib/utils/signInAndRedirect";
-import Axios from "@/app/lib/axios";
-import Cookies from "js-cookie";
-
-const BASE_URL = "http://localhost:3000/api";
+import React, { useState, useEffect } from "react";
+import { signIn } from "next-auth/react";
 
 const Page: React.FC = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<LoginUserSchema>({
-        resolver: zodResolver(LoginUserSchema),
-        mode: "onTouched",
-    });
-
-    const [user, setUser] = useState({
+    const [data, setData] = useState({
         email: "",
         password: "",
     });
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    const router = useRouter();
 
     useEffect(() => {
-        if (user.email.length > 0 && user.password.length > 0) {
+        if (data.email.length > 0 && data.password.length > 0) {
             setButtonDisabled(false);
         } else {
             setButtonDisabled(true);
         }
-    }, [user]);
+    }, [data]);
 
-    const handleLogin = async (data: LoginUserSchema) => {
-        console.log(data);
-
+    const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
         try {
-            const response = await Axios.post(`${BASE_URL}`, data);
-            console.log(response.data)
+            event.preventDefault();
+            await signIn("credentials", {
+                ...data,
+                redirect: false,
+            })
 
-            if (response.status === 200) {
-                const {
-                    token,
-                    email,
-                    roleId,
-                    id,
-                }: {
-                    token: string;
-                    email: string;
-                    roleId: number;
-                    id: string;
-                } = await response.data;
+            
 
-                // Cookies.set("token", token, {
-                //     secure: true,
-                //     sameSite: "None",
-                //     expires: 1,
-                // });
-                // Cookies.set("email", email, {
-                //     secure: true,
-                //     sameSite: "None",
-                //     expires: 1,
-                // });
-                // Cookies.set("roleId", roleId, {
-                //     secure: true,
-                //     sameSite: "None",
-                //     expires: 1,
-                // });
-                // Cookies.set("userId", id, {
-                //     secure: true,
-                //     sameSite: "None",
-                //     expires: 1,
-                // });
 
-                signInAndRedirect(roleId);
-            }
+
         } catch (error) {
             console.log(error);
         }
@@ -92,7 +43,7 @@ const Page: React.FC = () => {
                         Connexion
                     </h3>
                     <form
-                        onSubmit={handleSubmit(handleLogin)}
+                        onSubmit={loginUser}
                         className="flex flex-col items-center justify-between form rounded-md p-10 mt-4"
                     >
                         <div className="flex flex-col mb-4 w-full">
@@ -103,19 +54,15 @@ const Page: React.FC = () => {
                                 type="email"
                                 id="email"
                                 className="rounded-md p-3"
-                                {...register("email")}
+                                name="email"
+                                value={data.email}
                                 onChange={(event) =>
-                                    setUser({
-                                        ...user,
+                                    setData({
+                                        ...data,
                                         email: event.target.value,
                                     })
                                 }
                             />
-                            {errors.email ? (
-                                <p className="text-center error-msg">
-                                    {errors.email?.message}
-                                </p>
-                            ) : null}
                         </div>
                         <div className="flex flex-col mb-4 w-full">
                             <label className="font-bold" htmlFor="password">
@@ -124,20 +71,17 @@ const Page: React.FC = () => {
                             <input
                                 type="password"
                                 id="password"
+                                required
+                                value={data.password}
                                 className="rounded-md p-3"
-                                {...register("password")}
+                                name="password"
                                 onChange={(event) =>
-                                    setUser({
-                                        ...user,
+                                    setData({
+                                        ...data,
                                         password: event.target.value,
                                     })
                                 }
                             />
-                            {errors.password ? (
-                                <p className="text-center error-msg">
-                                    {errors.password?.message}
-                                </p>
-                            ) : null}
                         </div>
                         <div className="flex justify-center w-full mt-4 border border-black px-3 py-1 bg-black rounded-md font-bold text-white custom-btn cursor-pointer">
                             <button type="submit" disabled={buttonDisabled}>
