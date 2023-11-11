@@ -1,3 +1,7 @@
+'use client'
+
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import Table from "@/app/ui/components/Table/Table";
 
 const dataFromBackend = [
@@ -54,6 +58,15 @@ const dataFromBackend = [
 const columnsToShow = ["id", "firstName", "email"];
 
 const Consultants: React.FC = () => {
+
+    const { data: session } = useSession({
+        required: true,
+        onUnauthenticated() {
+            redirect("/login?callbackUrl=/admin/consultants");
+        },
+    });
+
+
     const filteredData: Record<string, any>[] = dataFromBackend.map(
         (row: any) => {
             const filteredRow: Record<string, any> = {};

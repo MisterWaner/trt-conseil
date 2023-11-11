@@ -1,10 +1,24 @@
+'use client';
+
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+
 const Dashboard: React.FC = () => {
+
+    const { data: session } = useSession({
+        required: true,
+        onUnauthenticated() {
+            redirect("/login?callbackUrl=/admin");
+        },
+    });
+
     return (
         <div className="flex flex-col h-full w-full">
             <main className="container-xl mx-10 h-full mt-[100px] md:mx-20">
                 <h1 className="font-medium text-center text-xl md:text-3xl">
                     Portail administrateur
                 </h1>
+                <p className="mt-2">Bonjour {session?.user?.name }</p>
                 <section className="mt-10">
                     <h3 className="text-lg font-medium underline underline-offset-2">
                         Enregistrer un consultant

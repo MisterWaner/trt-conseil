@@ -1,11 +1,23 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { FaUserNinja } from "react-icons/fa6";
 import Modal from "@/app/ui/components/Modal/Modal";
 import PersonalInfoForm from "@/app/ui/components/Forms/PersonalInfoForm";
 import ModifyPasswordForm from "@/app/ui/components/Forms/ModifyPasswordForm";
 
-const Home: React.FC = () => {
+const Profile = () => {
+
+    const { data: session } = useSession(
+        {
+            required: true,
+            onUnauthenticated() {
+                redirect("/login?callbackUrl=/candidat");
+            },
+        }
+    )
+   
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeForm, setActiveForm] = useState<string | null>(null);
 
@@ -126,4 +138,4 @@ const Home: React.FC = () => {
     );
 };
 
-export default Home;
+export default Profile;

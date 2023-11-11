@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserSchema } from "@/app/lib/validations/user.schema";
+import signInAndRedirect from "../lib/utils/signInAndRedirect";
 import Axios from "@/app/lib/axios";
 import Cookies from "js-cookie";
 
@@ -39,7 +40,7 @@ const Page: React.FC = () => {
         console.log(data);
 
         try {
-            const response = await Axios.post(`${BASE_URL}/auth/login`, data);
+            const response = await Axios.post(`${BASE_URL}`, data);
             console.log(response.data)
 
             if (response.status === 200) {
@@ -51,42 +52,32 @@ const Page: React.FC = () => {
                 }: {
                     token: string;
                     email: string;
-                    roleId: any;
+                    roleId: number;
                     id: string;
                 } = await response.data;
 
-                Cookies.set("token", token, {
-                    secure: true,
-                    sameSite: "None",
-                    expires: 1,
-                });
-                Cookies.set("email", email, {
-                    secure: true,
-                    sameSite: "None",
-                    expires: 1,
-                });
-                Cookies.set("roleId", roleId, {
-                    secure: true,
-                    sameSite: "None",
-                    expires: 1,
-                });
-                Cookies.set("userId", id, {
-                    secure: true,
-                    sameSite: "None",
-                    expires: 1,
-                });
+                // Cookies.set("token", token, {
+                //     secure: true,
+                //     sameSite: "None",
+                //     expires: 1,
+                // });
+                // Cookies.set("email", email, {
+                //     secure: true,
+                //     sameSite: "None",
+                //     expires: 1,
+                // });
+                // Cookies.set("roleId", roleId, {
+                //     secure: true,
+                //     sameSite: "None",
+                //     expires: 1,
+                // });
+                // Cookies.set("userId", id, {
+                //     secure: true,
+                //     sameSite: "None",
+                //     expires: 1,
+                // });
 
-                if (roleId === 1) {
-                    router.push("/admin");
-                } else if (roleId === 2) {
-                    router.push("/consultant");
-                } else if (roleId === 3) {
-                    router.push("/recruiter");
-                } else if (roleId === 4) {
-                    router.push("/candidate");
-                } else {
-                    router.push("/");
-                }
+                signInAndRedirect(roleId);
             }
         } catch (error) {
             console.log(error);

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { poppins } from "@/app/ui/fonts";
+import NextAuthProvider from "@/app/lib/providers/NextAuthProvider";
 import PublicNavBar from "@/app/ui/components/NavBars/PublicNavBar";
 import "@/app/globals.css";
 
@@ -16,8 +17,10 @@ export default function RootLayout({
     return (
         <html lang="fr">
             <body className={`${poppins.className} antialiased`}>
+                <NextAuthProvider>
                     <PublicNavBar />
                     {children}
+                </NextAuthProvider>
             </body>
         </html>
     );

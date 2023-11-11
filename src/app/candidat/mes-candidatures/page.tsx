@@ -1,6 +1,21 @@
+'use client';
+
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+
 import ApplicationCard from "@/app/ui/components/Cards/ApplicationCard";
 
-const MyApplications: React.FC = () => {
+const MyApplications = () => {
+
+    const { data: session } = useSession(
+        {
+            required: true,
+            onUnauthenticated() {
+                redirect("/login?callbackUrl=/candidat");
+            },
+        }
+    )
+
     return (
         <div className="flex flex-col min-h-screen">
             <main className="container-xl mx-10 h-full mt-[100px] md:mx-20">
