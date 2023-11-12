@@ -1,8 +1,8 @@
 import { prisma } from "@/app/lib/prisma";
-import { RegisterUserSchema } from "@/app/lib/validations/user.schema";
 import { generateTemporaryPassword } from "@/app/lib/utils/generateTemporaryPassword";
 import { encryptPassword } from "@/app/lib/utils/encryptPassword";
 import { NextResponse, NextRequest } from "next/server";
+import { Role } from "@prisma/client";
 
 export async function POST(request: NextRequest) {
     try {
@@ -10,25 +10,25 @@ export async function POST(request: NextRequest) {
         const {
             email,
             password,
-            roleId,
+            role,
             confirmation,
         }: {
             email: string;
             password: string;
             confirmation: string;
-            roleId: number;
+            role: Role;
             } = body.data;
         
         console.log(body.data);
 
-        if (roleId === 1) {
+        if (role === "admin") {
             if (!email || !password)
                 return NextResponse.json("Paramètre manquant", {status: 400});
 
             const admin = await prisma.user.findUnique({
                 where: {
                     email: email,
-                    roleId: roleId,
+                    role: role,
                 },
             });
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
                 data: {
                     email: email,
                     password: hashPassword,
-                    roleId: roleId,
+                    role: role,
                 },
             });
             return NextResponse.json({
@@ -49,14 +49,14 @@ export async function POST(request: NextRequest) {
                 data: newAdmin,
                 password,
             });
-        } else if (roleId === 2) {
+        } else if (role === "consultant") {
             if (!email)
                 return NextResponse.json("Paramètre manquant", {status: 400});
 
             const consultant = await prisma.user.findUnique({
                 where: {
                     email: email,
-                    roleId: roleId,
+                    role: role,
                 },
             });
 
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
                 data: {
                     email: email,
                     password: hashPassword,
-                    roleId: roleId,
+                    role: role,
                 },
             });
 
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
                 data: newConsultant,
                 temporaryPassword,
             });
-        } else if (roleId === 3 || roleId === 4) {
+        } else if (role === "recruiter" || role === "candidat") {
             if (!email || !password || !confirmation)
                 return NextResponse.json("Paramètre manquant", {status: 400});
 
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
             const user = await prisma.user.findUnique({
                 where: {
                     email: email,
-                    roleId: roleId,
+                    role: role,
                 },
             });
 
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
                 data: {
                     email: email,
                     password: hashPassword,
-                    roleId: roleId,
+                    role: role,
                 },
             });
 

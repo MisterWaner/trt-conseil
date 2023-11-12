@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
+import { Role } from "@prisma/client";
 
 type Props = {
     params: {
@@ -14,7 +15,7 @@ export async function GET(request: Request, { params: { id } }: Props) {
         const recruiter = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: 3,
+                role: "recruiter",
             },
         });
 
@@ -35,11 +36,11 @@ export async function PUT(request: Request, { params: { id } }: Props) {
         firstname,
         societyName,
         address,
-        roleId = 3,
+        role = "recruiter",
     }: {
         lastname: string;
         firstname: string;
-        roleId: number;
+        role: Role;
         societyName: string;
         address: string;
     } = await request.json();
@@ -50,7 +51,7 @@ export async function PUT(request: Request, { params: { id } }: Props) {
         const recruiter = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: roleId,
+                role: role,
             },
         });
 
@@ -61,7 +62,7 @@ export async function PUT(request: Request, { params: { id } }: Props) {
         const updatedRecruiter = await prisma.user.update({
             where: {
                 id: id,
-                roleId: roleId,
+                role: role,
             },
             data: {
                 lastname: lastname,
@@ -85,7 +86,7 @@ export async function DELETE(request: Request, { params: { id } }: Props) {
         const deletedRecruiter = await prisma.user.delete({
             where: {
                 id: id,
-                roleId: 3,
+                role: "recruiter",
             },
         });
 

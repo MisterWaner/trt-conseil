@@ -5,7 +5,7 @@ import { prisma } from "@/app/lib/prisma";
 export async function GET() {
     try {
         const consultants = await prisma.user.findMany({
-            where: { roleId: 2 },
+            where: { role: "consultant" },
             orderBy: {
                 id: "asc",
             },

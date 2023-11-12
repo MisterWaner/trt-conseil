@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
-import { PrismaClient } from "@prisma/client";
 import { faker } from "@faker-js/faker";
+import { Role, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+
 
 async function main() {
     await prisma.offer.deleteMany();
@@ -15,7 +16,7 @@ async function main() {
         data: {
             email: "admin@trt-conseil.fr",
             password: hashedPassword,
-            role: admin,
+            role: Role.admin,
             isApproved: true,
         },
     });
@@ -26,7 +27,7 @@ async function main() {
             data: {
                 email: faker.internet.email({provider: "trt-conseil.fr"}),
                 password: faker.internet.password({ length: 25 }),
-                role: consultant,
+                role: Role.consultant,
                 isApproved: true,
             },
         });
@@ -37,7 +38,7 @@ async function main() {
                 password: faker.internet.password({ length: 25 }),
                 firstname: faker.person.firstName(),
                 lastname: faker.person.lastName(),
-                role: candidat,
+                role: Role.candidat,
             },
         });
         await prisma.user.create({
@@ -46,7 +47,7 @@ async function main() {
                 password: faker.internet.password({ length: 25 }),
                 societyName: faker.company.name(),
                 address: faker.location.streetAddress(),
-                role: recruiter,
+                role: Role.recruiter,
             },
         });
         console.log("Seeding done");
@@ -54,7 +55,7 @@ async function main() {
 
     const recruiters = await prisma.user.findMany({
         where: {
-            role: recruiter,
+            role: Role.recruiter,
         },
     });
 

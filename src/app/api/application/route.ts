@@ -22,7 +22,7 @@ export async function POST(request: Request) {
         const candidate = await prisma.user.findUnique({
             where: {
                 id: userId,
-                roleId: 4,
+                role: "candidat",
             },
         });
 

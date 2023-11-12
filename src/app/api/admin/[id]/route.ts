@@ -14,7 +14,7 @@ export async function GET(request: Request, { params: { id } }: Props) {
         const admin = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: 1,
+                role: "admin",
             },
         });
 
@@ -36,7 +36,7 @@ export async function DELETE(request: Request, { params: { id } }: Props) {
         const admin = await prisma.user.findUnique({
             where: {
                 id: id,
-                roleId: 1,
+                role: "admin",
             },
         });
 
@@ -45,7 +45,7 @@ export async function DELETE(request: Request, { params: { id } }: Props) {
         const deletedAdmin = await prisma.user.delete({
             where: {
                 id: id,
-                roleId: 1
+                role: "admin"
             },
         });
 

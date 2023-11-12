@@ -6,7 +6,7 @@ export async function GET() {
     try {
         const toApproveCandidates = await prisma.user.findMany({
             where: {
-                roleId: 4,
+                role: "candidat",
                 isApproved: false,
             },
             orderBy: {
